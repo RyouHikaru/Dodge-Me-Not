@@ -329,7 +329,7 @@ class Mob():
 
 # GAME STATES Class
 class GameState(Enum):
-    PAUSE = -2
+    CONFIRM_QUIT = -2
     QUIT = -1
     TITLE = 0
     NEWGAME = 1
@@ -403,7 +403,7 @@ def title_screen(screen):
         bg_rgb=BLUE,
         text_rgb=WHITE,
         text="Quit",
-        action=GameState.QUIT,
+        action=GameState.CONFIRM_QUIT,
     )
 
     buttons = [prev_char_btn, next_char_btn, start_btn, optn_btn, view_btn, quit_btn]
@@ -649,7 +649,7 @@ def view_high_score_screen(screen):
 
     center = Game.SCREEN_RESOLUTION[0]/2
 
-    view_scores_text = medium_font.render("High Scores", True, WHITE)
+    view_scores_text = medium_font.render("Top 10 High Scores", True, WHITE)
     view_scores_text_rect = view_scores_text.get_rect()
     view_scores_text_rect.center = (center, 50)
 
@@ -807,6 +807,57 @@ def display_end_game_result(stats, screen, saved):
     screen.blit(player_level, player_level_rect)
     screen.blit(player_score, player_score_rect)
 
+# CONFIRM EXIT SCREEN
+def confirm_quit_screen(screen):
+    font = pygame.font.SysFont('courier', 50)
+    center_x = Game.SCREEN_RESOLUTION[0]/2
+
+    exit_text = font.render("Confirm Exit?", True, WHITE)
+    exit_text_rect = exit_text.get_rect()
+    exit_text_rect.center = (center_x, 200)
+
+    yes_btn = UIElement(
+        center_position=(center_x - 100, 300),
+        font_size=30,
+        bg_rgb=BLUE,
+        text_rgb=WHITE,
+        text="Yes",
+        action=GameState.QUIT,
+    )
+
+    no_btn = UIElement(
+        center_position=(center_x + 100, 300),
+        font_size=30,
+        bg_rgb=BLUE,
+        text_rgb=WHITE,
+        text="No",
+        action=GameState.TITLE,
+    )
+
+    buttons = [yes_btn, no_btn]
+
+    while True:
+        mouse_up = False
+        events = pygame.event.get()
+
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                mouse_up = True
+
+        screen.fill(BLUE)
+        screen.blit(exit_text, exit_text_rect)
+
+        for button in buttons:
+            ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
+            if ui_action is not None:
+                if Game.game_sounds:
+                    click_sound.play()
+
+                return ui_action
+            button.draw(screen)
+
+        pygame.display.flip()
+
 """ MAIN DRIVER """
 def main():
     pygame.init()
@@ -863,6 +914,9 @@ def main():
             else:
                 Game.game_speed = 3
             game_state = GameState.OPTIONS
+
+        if game_state == GameState.CONFIRM_QUIT:
+            game_state = confirm_quit_screen(Game.SCREEN)
 
         if game_state == GameState.QUIT:
             pygame.quit()
