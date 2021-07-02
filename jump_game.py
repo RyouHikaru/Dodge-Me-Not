@@ -453,7 +453,7 @@ def title_screen(screen):
 
     player_icon = pygame.image.load(f'img/player_icons/{Game.player_type}.png')
     player_icon_rect = player_icon.get_rect()
-    player_icon_rect.center = (360, 100)
+    player_icon_rect.center = (center_x, 100)
 
     while True:
         mouse_up = False
