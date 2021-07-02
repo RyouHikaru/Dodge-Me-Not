@@ -107,6 +107,7 @@ class Game():
     game_music = True
     game_sounds = True
     game_diff_hard = False
+    game_control_arrow_keys = False
     mob_list = []
     player_type = 1
     pause = False
@@ -206,34 +207,64 @@ class Game():
             self.score()
 
             for event in pygame.event.get():
-                # KEYBOARD INPUT
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_a:
-                        self.move_left = True
-                    if event.key == pygame.K_d:
-                        self.move_right = True
-                    if event.key == pygame.K_w:
-                        self.player.move_up = True
-                        if Game.game_sounds:
-                            jump_sound.play()
-                    if event.key == pygame.K_s:
-                        self.player.move_down = True
-                    if event.key == pygame.K_ESCAPE:
-                        Game.pause = True
-                        game_state = pause_screen(Game.SCREEN)
+                if not Game.game_control_arrow_keys:
+                    # KEYBOARD INPUT (WASD Keys)
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_a:
+                            self.move_left = True
+                        if event.key == pygame.K_d:
+                            self.move_right = True
+                        if event.key == pygame.K_w:
+                            self.player.move_up = True
+                            if Game.game_sounds:
+                                jump_sound.play()
+                        if event.key == pygame.K_s:
+                            self.player.move_down = True
+                        if event.key == pygame.K_ESCAPE:
+                            Game.pause = True
+                            game_state = pause_screen(Game.SCREEN)
 
-                        if game_state == GameState.TITLE:
-                            self.reset()
-                            return
+                            if game_state == GameState.TITLE:
+                                self.reset()
+                                return
 
-                # KEYBOARD INPUT RELEASE
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_a:
-                        self.move_left = False
-                    if event.key == pygame.K_d:
-                        self.move_right = False
-                    if event.key == pygame.K_s:
-                        self.player.move_down = False
+                    # KEYBOARD INPUT RELEASE
+                    if event.type == pygame.KEYUP:
+                        if event.key == pygame.K_a:
+                            self.move_left = False
+                        if event.key == pygame.K_d:
+                            self.move_right = False
+                        if event.key == pygame.K_s:
+                            self.player.move_down = False
+                else:
+                    # KEYBOARD INPUT (Arrow Keys)
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_LEFT:
+                            self.move_left = True
+                        if event.key == pygame.K_RIGHT:
+                            self.move_right = True
+                        if event.key == pygame.K_UP:
+                            self.player.move_up = True
+                            if Game.game_sounds:
+                                jump_sound.play()
+                        if event.key == pygame.K_DOWN:
+                            self.player.move_down = True
+                        if event.key == pygame.K_ESCAPE:
+                            Game.pause = True
+                            game_state = pause_screen(Game.SCREEN)
+
+                            if game_state == GameState.TITLE:
+                                self.reset()
+                                return
+
+                    # KEYBOARD INPUT RELEASE
+                    if event.type == pygame.KEYUP:
+                        if event.key == pygame.K_LEFT:
+                            self.move_left = False
+                        if event.key == pygame.K_RIGHT:
+                            self.move_right = False
+                        if event.key == pygame.K_DOWN:
+                            self.player.move_down = False
 
             pygame.display.update()
 
@@ -340,6 +371,7 @@ class GameState(Enum):
     MUSIC = 6
     SOUND = 7
     DIFF = 8
+    CONTROLS = 9
 
 """ GAME SCREEN-RELATED FUNCTIONS """
 
@@ -558,7 +590,7 @@ def pause_screen(screen):
         pygame.display.flip()
 
 # VIEW OPTIONS SCREEN
-def options_screen(screen, music_toggle, sounds_toggle, diff_toggle):
+def options_screen(screen, music_toggle, sounds_toggle, diff_toggle, controls_toggle):
     font = pygame.font.SysFont('courier', 30)
     
     options_text = font.render("Options", True, WHITE)
@@ -568,6 +600,7 @@ def options_screen(screen, music_toggle, sounds_toggle, diff_toggle):
     music = "Music: ON"
     sounds = "Sounds: ON"
     diff = "Difficulty: EASY"
+    controls = "Controls: WASD keys"
 
     if music_toggle:
         music = "Music: ON"
@@ -583,6 +616,11 @@ def options_screen(screen, music_toggle, sounds_toggle, diff_toggle):
         diff = "Difficulty: HARD"
     else:
         diff = "Difficulty: EASY"
+
+    if controls_toggle:
+        controls = "Controls: ARROW keys"
+    else:
+        controls = "Controls: WASD keys"
 
     return_btn = UIElement(
         center_position=(150, 450),
@@ -616,8 +654,16 @@ def options_screen(screen, music_toggle, sounds_toggle, diff_toggle):
         text=diff,
         action=GameState.DIFF,
     )
+    controls_btn = UIElement(
+        center_position=(380, 300),
+        font_size=20,
+        bg_rgb=BLUE,
+        text_rgb=WHITE,
+        text=controls,
+        action=GameState.CONTROLS,
+    )
 
-    buttons = [sounds_btn, music_btn, diff_btn, return_btn]
+    buttons = [sounds_btn, music_btn, diff_btn, controls_btn, return_btn]
 
     while True:
         mouse_up = False
@@ -877,7 +923,8 @@ def main():
             game_state = play_game(Game.SCREEN)
 
         if game_state == GameState.OPTIONS:
-            game_state = options_screen(Game.SCREEN, Game.game_music, Game.game_sounds, Game.game_diff_hard)
+            game_state = options_screen(Game.SCREEN, Game.game_music, Game.game_sounds, 
+                                        Game.game_diff_hard, Game.game_control_arrow_keys)
 
         if game_state == GameState.VIEWSCORES:
             game_state = view_high_score_screen(Game.SCREEN)
@@ -913,6 +960,10 @@ def main():
                 Game.game_speed = 8
             else:
                 Game.game_speed = 3
+            game_state = GameState.OPTIONS
+
+        if game_state == GameState.CONTROLS:
+            Game.game_control_arrow_keys = not Game.game_control_arrow_keys
             game_state = GameState.OPTIONS
 
         if game_state == GameState.CONFIRM_QUIT:
