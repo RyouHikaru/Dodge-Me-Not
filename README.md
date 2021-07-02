@@ -17,10 +17,10 @@ To install Pygame:
 
 Controls:
 
-W - Jump
-A - Move left
-S - Move down
-D - Move right
-ESC - Pause
+1. W - Jump
+2. A - Move left
+3. S - Move down
+4. D - Move right
+5. ESC - Pause
 
 *Note: This settings can be changed into Arrow keys in the Options screen
