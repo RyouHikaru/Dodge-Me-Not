@@ -1,5 +1,5 @@
 This game is entitled "Dodge me Not", the final project requirement in CS0053.
-It is similar with the infamous Dinosaur game in Chrom browser when Offline.
+It is similar with the infamous Dinosaur game in Chrome browser when Offline.
 
 In order to run the game, you need to:
 1. Install Python
