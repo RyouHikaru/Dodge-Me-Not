@@ -197,7 +197,9 @@ class Game():
                 mob.draw(Game.SCREEN)
                 mob.update()
                 if self.player.rect.colliderect(mob.rect):
-                    hit_sound_effect.play()
+                    if Game.game_sounds:
+                        hit_sound_effect.play()
+                        
                     pygame.time.delay(2000)
                     self.running = False
                     level = self.level
