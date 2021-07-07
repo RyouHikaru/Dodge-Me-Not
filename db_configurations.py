@@ -35,9 +35,6 @@ def query_scores(conn):
 
     return rows
 
-    # for row in rows:
-    #     print(row)
-
 db_file = r"game.db"
 create_table_sql = """CREATE TABLE IF NOT EXISTS game_records (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,

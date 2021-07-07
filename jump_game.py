@@ -942,6 +942,10 @@ def about_screen(screen):
     sentence_3_text_rect = sentence_3_text.get_rect()
     sentence_3_text_rect.center = (center_x, 370)
 
+    sentence_4_text = smaller_font.render("Background image credits: https://www.pinterest.com (Pinterest)", True, WHITE)
+    sentence_4_text_rect = sentence_4_text.get_rect()
+    sentence_4_text_rect.center = (center_x, 400)
+
     return_btn = UIElement(
         center_position=(150, 450),
         font_size=20,
@@ -965,6 +969,7 @@ def about_screen(screen):
         screen.blit(group_logo, group_logo_rect)
         screen.blit(sentence_2_text, sentence_2_text_rect)
         screen.blit(sentence_3_text, sentence_3_text_rect)
+        screen.blit(sentence_4_text, sentence_4_text_rect)
         
         ui_action = return_btn.update(pygame.mouse.get_pos(), mouse_up)
         if ui_action is not None:
