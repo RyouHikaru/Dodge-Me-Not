@@ -24,7 +24,7 @@ class TextInput:
             font_size=35,
             antialias=True,
             text_color=(255, 255, 255),
-            cursor_color=(0, 0, 1),
+            cursor_color=(255, 255, 255),
             repeat_keys_initial_ms=400,
             repeat_keys_interval_ms=35,
             max_string_length=10,
