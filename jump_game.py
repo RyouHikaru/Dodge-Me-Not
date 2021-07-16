@@ -17,7 +17,7 @@ BLACK = (0, 0, 0)
 
 # BACKGROUND MUSIC AND SOUND EFFECTS
 pygame.mixer.init()
-pygame.mixer.music.load('sounds/bg_music_alt.mp3')
+pygame.mixer.music.load('sounds/bg_music.mp3')
 pygame.mixer.music.set_volume(0.5)
 
 jump_sound = pygame.mixer.Sound('sounds/jump_sound.mp3')
@@ -32,7 +32,7 @@ def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
     return surface.convert_alpha()
 
-# UI ELEMENT Class
+# UI ELEMENT Class (Buttons)
 class UIElement(Sprite):
     """ A user interface element that can be added to a surface """
 
